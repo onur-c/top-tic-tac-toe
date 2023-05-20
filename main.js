@@ -10,14 +10,13 @@ const Gameboard = (() => {
   //     [1, 5, 9],
   //     [3, 5, 7],
   //   ];
-  let boardVisible = false;
 
-  const drawBoard = () => {
+  const drawBoard = (draw) => {
     // only generate divs first time
-    if (boardVisible) return;
+    if (!draw) return;
     // generate divs
     let gameboard = document.getElementById("gameboard");
-    gameboard.classList.toggle("inactive");
+    gameboard.classList.remove("inactive");
     board.forEach((cell, index) => {
       let squareCell = document.createElement("div");
       squareCell.classList.add("square");
@@ -28,7 +27,6 @@ const Gameboard = (() => {
       });
       gameboard.appendChild(squareCell);
     });
-    boardVisible = true;
   };
 
   return { board, drawBoard };
@@ -86,10 +84,10 @@ const Game = (() => {
 
     let getWinnerMsg = () => {
       if (table[index] === "O") {
-        return player2.getName() + "wins";
+        return player2.getName() + " wins";
       }
       if (table[index] === "X") {
-        return player1.getName() + "wins";
+        return player1.getName() + " wins";
       }
     };
 
@@ -149,27 +147,46 @@ const Game = (() => {
       let winner = getWinnerMsg();
       showWinMsg(winner);
     }
-    if (turn === 9) console.log("Its a tie");
+    if (turn === 9) showWinMsg("Its a tie!");
   };
 
   const showWinMsg = (msg) => {
-    let heroText = document.getElementById("hero-text");
-    if (heroText.childNodes.length > 2) return;
-    let msgEl = document.createElement("div");
-    msgEl.classList.add("win-msg");
-    msgEl.innerHTML = `<p>${msg} </p>`;
-    heroText.append(msgEl);
+    // let heroText = document.getElementById("hero-text");
+    // if (heroText.childNodes.length > 2) return;
+    // let msgEl = document.createElement("div");
+    // msgEl.classList.add("win-msg");
+    // msgEl.innerHTML = `<p>${msg} </p>`;
+    // heroText.append(msgEl);
+
+    alert(msg);
+
+    setTimeout(() => {
+      restartGame();
+    }, 1500);
   };
 
-  return { getPlayers, placeMark, checkWin, player1, player2 };
+  const restartGame = () => {
+    turn = 0;
+    Gameboard.board = ["", "", "", "", "", "", "", "", ""];
+    // document.querySelector(".win-msg").remove();
+
+    document.getElementById("gameboard").innerHTML = "";
+
+    Gameboard.drawBoard(true);
+  };
+
+  return { getPlayers, placeMark, checkWin, player1, player2, restartGame };
 })();
 
 // Bind start button with drawboard + start game
 document.getElementById("start-btn").addEventListener("click", () => {
-  Gameboard.drawBoard();
+  Gameboard.drawBoard(true);
   Game.getPlayers();
 });
 
+document.getElementById("restart-btn").addEventListener("click", () => {
+  Game.restartGame();
+});
 // TODO  will add restart button
 
 // TODO will end game after win
