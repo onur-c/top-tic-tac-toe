@@ -7,6 +7,7 @@
 3. Draw a line trough the winning line-up.
 4. Maybe get rid of player names. Player X / Player O ?
 5. Add AI bot.
+6. Show which player's turn.
 
 ### v1.0-
 
